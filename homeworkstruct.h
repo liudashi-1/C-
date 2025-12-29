@@ -56,4 +56,82 @@ typedef struct {
     char create_time[20];// 交易时间
     char description[MAX_DESCRIPTION];// 备注
 } financerecord;
+
+userinformation g_users[MAX_RECORD];// 用户信息数组
+int g_user_count = 0;// 当前用户总数
+clubinformation g_clubs[MAX_RECORD];// 社团信息数组
+int g_club_count = 0;// 当前社团总数
+financerecord g_finance_records[MAX_RECORD]; // 财务流水数组
+int g_finance_count = 0;// 当前财务流水总数
+
+//------------------------------用户------------------------------
+// 1. 用户查找（按用户名，返回索引，-1表示不存在）
+inline int user_find(const char *username) {
+    if (username == NULL || strlen(username) == 0) {
+        return -1;
+    }
+    for (int i = 0; i < g_user_count; i++) {
+        if (strcmp(g_users[i].username, username) == 0) {
+            return i;
+        }
+    }
+    return -1;
+}
+// 2. 用户新增（返回1成功，0失败：用户名已存在/超出最大记录数）
+inline int user_add(const userinformation *user) {
+    if (user == NULL || g_user_count >= MAX_RECORD) {
+        return 0;
+    }
+    // 检查用户名是否重复
+    if (user_find(user->username) != -1) {
+        return 0;
+    }
+    // 拷贝数据到全局数组
+    memcpy(&g_users[g_user_count], user, sizeof(userinformation));
+    g_user_count++;
+    return 1;
+}
+// 3. 用户修改（按用户名，返回1成功，0失败：用户不存在）
+inline int user_update(const char *username, const userinformation *new_user) {
+    if (username == NULL || new_user == NULL) {
+        return 0;
+    }
+    int index = user_find(username);
+    if (index == -1) {
+        return 0;
+    }
+    // 覆盖原有数据（用户名不可修改，确保一致性）
+    memcpy(&g_users[index], new_user, sizeof(userinformation));
+    return 1;
+}
+// 4. 用户删除（按用户名，返回1成功，0失败：用户不存在）
+inline int user_delete(const char *username) {
+    if (username == NULL || strlen(username) == 0) {
+        return 0;
+    }
+    int index = user_find(username);
+    if (index == -1) {
+        return 0;
+    }
+    // 数组前移覆盖（删除元素）
+    for (int i = index; i < g_user_count - 1; i++) {
+        memcpy(&g_users[i], &g_users[i+1], sizeof(userinformation));
+    }
+    g_user_count--;
+    return 1;
+}
+// 5. 用户数据保存到文件（二进制持久化，路径：users.dat）
+inline void user_save_to_file() {
+    FILE *f = fopen("users.dat", "wb");
+    if (f == NULL) {
+        printf("【错误】用户数据保存失败，无法打开文件！\n");
+        return;
+    }
+    // 先保存用户总数，再保存用户数组
+    fwrite(&g_user_count, sizeof(int), 1, f);
+    fwrite(g_users, sizeof(userinformation), g_user_count, f);
+    fclose(f);
+    printf("【成功】用户数据已保存，共%d条记录！\n", g_user_count);
+}
+
 #endif //UNTITLED8_HOMEWORKSTRUCT_H
