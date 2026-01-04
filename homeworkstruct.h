@@ -1,5 +1,3 @@
-#ifndef UNTITLED8_HOMEWORKSTRUCT_H
-#define UNTITLED8_HOMEWORKSTRUCT_H
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -66,7 +64,7 @@ int g_finance_count = 0;// 当前财务流水总数
 
 // -------------------- 工具函数封装 --------------------
 // 异或加密/解密函数（对称加密，加密解密同一逻辑）
-inline void xor_encrypt_decrypt(char *str) {
+void xor_encrypt_decrypt(char *str) {
     if (str == NULL || strlen(str) == 0) {
         return;
     }
@@ -76,7 +74,7 @@ inline void xor_encrypt_decrypt(char *str) {
 }
 // 获取当前时间字符串
 // is_long: 1=长格式（财务流水），0=短格式（社团成立时间）
-inline void get_current_time(char *time_str, int is_long) {
+void get_current_time(char *time_str, int is_long) {
     if (time_str == NULL) {
         return;
     }
@@ -93,7 +91,7 @@ inline void get_current_time(char *time_str, int is_long) {
 }
 //------------------------------用户------------------------------
 // 1. 用户查找（按用户名，返回索引，-1表示不存在）
-inline int user_find(const char *username) {
+int user_find(const char *username) {
     if (username == NULL || strlen(username) == 0) {
         return -1;
     }
@@ -105,7 +103,7 @@ inline int user_find(const char *username) {
     return -1;
 }
 // 2. 用户新增（返回1成功，0失败：用户名已存在/超出最大记录数）
-inline int user_add(const userinformation *user) {
+int user_add(const userinformation *user) {
     if (user == NULL || g_user_count >= MAX_RECORD) {
         return 0;
     }
@@ -119,7 +117,7 @@ inline int user_add(const userinformation *user) {
     return 1;
 }
 // 3. 用户修改（按用户名，返回1成功，0失败：用户不存在）
-inline int user_update(const char *username, const userinformation *new_user) {
+int user_update(const char *username, const userinformation *new_user) {
     if (username == NULL || new_user == NULL) {
         return 0;
     }
@@ -132,7 +130,7 @@ inline int user_update(const char *username, const userinformation *new_user) {
     return 1;
 }
 // 4. 用户删除（按用户名，返回1成功，0失败：用户不存在）
-inline int user_delete(const char *username) {
+int user_delete(const char *username) {
     if (username == NULL || strlen(username) == 0) {
         return 0;
     }
@@ -148,7 +146,7 @@ inline int user_delete(const char *username) {
     return 1;
 }
 // 5. 用户数据保存到文件
-inline void user_save_to_file() {
+void user_save_to_file() {
     FILE *f = fopen("users.dat", "wb");
     if (f == NULL) {
         printf("【错误】用户数据保存失败，无法打开文件！\n");
@@ -161,7 +159,7 @@ inline void user_save_to_file() {
     printf("【成功】用户数据已保存，共%d条记录！\n", g_user_count);
 }
 // 6. 用户数据从文件加载（二进制读取，路径：users.dat）
-inline void user_load_from_file() {
+void user_load_from_file() {
     FILE *fp = fopen("users.dat", "rb");
     if (fp == NULL) {
         printf("【提示】无历史用户数据，将创建新数据！\n");
@@ -179,7 +177,7 @@ inline void user_load_from_file() {
 }
 //-----------------------社团-----------------------
 // 1. 社团查找（按社团名称，返回索引，-1表示不存在）
-inline int club_find_by_name(const char *club_name) {
+int club_find_by_name(const char *club_name) {
     if (club_name == NULL || strlen(club_name) == 0) {
         return -1;
     }
@@ -191,7 +189,7 @@ inline int club_find_by_name(const char *club_name) {
     return -1;
 }
 // 2. 社团新增（返回1成功，0失败：名称已存在/超出最大记录数）
-inline int club_add(const clubinformation *club) {
+int club_add(const clubinformation *club) {
     if (club == NULL || g_club_count >= MAX_RECORD) {
         return 0;
     }
@@ -206,7 +204,7 @@ inline int club_add(const clubinformation *club) {
     return 1;
 }
 // 3. 社团修改（按社团名称，返回1成功，0失败：社团不存在）
-inline int club_update(const char *club_name, const clubinformation *new_club) {
+int club_update(const char *club_name, const clubinformation *new_club) {
     if (club_name == NULL || new_club == NULL) {
         return 0;
     }
@@ -225,7 +223,7 @@ inline int club_update(const char *club_name, const clubinformation *new_club) {
 void club_member_list_free(clubmembernode ** clubmembernode);
 
 // 4. 社团删除（按社团名称，返回1成功，0失败：社团不存在）
-inline int club_delete(const char *club_name) {
+int club_delete(const char *club_name) {
     if (club_name == NULL || strlen(club_name) == 0) {
         return 0;
     }
@@ -244,7 +242,7 @@ inline int club_delete(const char *club_name) {
 }
 // -------------社团成员-------------
 // 1. 成员链表：查找成员（按姓名，返回节点指针，NULL表示不存在）
-inline clubmembernode *club_member_find(clubmembernode *head, const char *name) {
+clubmembernode *club_member_find(clubmembernode *head, const char *name) {
     if (head == NULL || name == NULL || strlen(name) == 0) {
         return NULL;
     }
@@ -258,7 +256,7 @@ inline clubmembernode *club_member_find(clubmembernode *head, const char *name) 
     return NULL;
 }
 // 2. 成员链表：新增成员（头插法，返回1成功，0失败：成员已存在）
-inline int club_member_add(clubmembernode **head, const char *name, memberposition position) {
+int club_member_add(clubmembernode **head, const char *name, memberposition position) {
     if (head == NULL || name == NULL || strlen(name) == 0) {
         return 0;
     }
@@ -279,7 +277,7 @@ inline int club_member_add(clubmembernode **head, const char *name, memberpositi
     return 1;
 }
 // 3. 成员链表：修改成员职位（按姓名，返回1成功，0失败：成员不存在）
-inline int club_member_update_position(clubmembernode *head, const char *name, memberposition new_position) {
+int club_member_update_position(clubmembernode *head, const char *name, memberposition new_position) {
     if (head == NULL || name == NULL || strlen(name) == 0) {
         return 0;
     }
@@ -291,7 +289,7 @@ inline int club_member_update_position(clubmembernode *head, const char *name, m
     return 1;
 }
 // 4. 成员链表：删除成员（按姓名，返回1成功，0失败：成员不存在）
-inline int club_member_delete(clubmembernode **head, const char *name) {
+int club_member_delete(clubmembernode **head, const char *name) {
     if (head == NULL || *head == NULL || name == NULL || strlen(name) == 0) {
         return 0;
     }
@@ -315,7 +313,7 @@ inline int club_member_delete(clubmembernode **head, const char *name) {
     return 1;
 }
 // 5. 成员链表：释放整个链表内存
-inline void club_member_list_free(clubmembernode **head) {
+void club_member_list_free(clubmembernode **head) {
     if (head == NULL || *head == NULL) {
         return;
     }
@@ -329,7 +327,7 @@ inline void club_member_list_free(clubmembernode **head) {
 }
 // ------------- 社团模块文件IO -------------
 // 1. 社团数据保存到文件
-inline void club_save_to_file() {
+void club_save_to_file() {
     // 保存社团基本信息
     FILE *fp = fopen("clubs.dat", "wb");
     if (fp == NULL) {
@@ -362,7 +360,7 @@ inline void club_save_to_file() {
     printf("【成功】社团数据已保存，共%d个社团！\n", g_club_count);
 }
 // 2. 社团数据从文件加载（恢复社团基本信息和成员链表）
-inline void club_load_from_file() {
+void club_load_from_file() {
     // 加载社团基本信息
     FILE *fp = fopen("clubs.dat", "rb");
     if (fp == NULL) {
@@ -421,7 +419,7 @@ inline void club_load_from_file() {
 }
 // -------------------------- 三、财务模块--------------------------
 // 1. 财务流水：按社团名称筛选（返回符合条件的记录数，结果存入out_records）
-inline int finance_filter_by_club(const char *club_name, financerecord *out_records, int max_out) {
+int finance_filter_by_club(const char *club_name, financerecord *out_records, int max_out) {
     if (club_name == NULL || out_records == NULL || max_out <= 0) {
         return 0;
     }
@@ -435,7 +433,7 @@ inline int finance_filter_by_club(const char *club_name, financerecord *out_reco
     return count;
 }
 // 2. 财务流水：新增记录（返回1成功，0失败：超出最大记录数/金额非正）
-inline int finance_add(const financerecord *record) {
+int finance_add(const financerecord *record) {
     if (record == NULL || g_finance_count >= MAX_RECORD || record->amount <= 0) {
         return 0;
     }
@@ -444,7 +442,7 @@ inline int finance_add(const financerecord *record) {
     return 1;
 }
 // 3. 财务流水：校验余额（按社团名称，返回当前余额，确保支出后余额非负）
-inline float finance_calc_balance(const char *club_name) {
+float finance_calc_balance(const char *club_name) {
     if (club_name == NULL || strlen(club_name) == 0) {
         return 0.0f;
     }
@@ -461,7 +459,7 @@ inline float finance_calc_balance(const char *club_name) {
     return balance;
 }
 // 4. 财务流水：删除记录（按索引，返回1成功，0失败：索引无效）
-inline int finance_delete(int index) {
+int finance_delete(int index) {
     if (index < 0 || index >= g_finance_count) {
         return 0;
     }
@@ -473,7 +471,7 @@ inline int finance_delete(int index) {
     return 1;
 }
 // 5. 财务数据保存到文件（二进制持久化，路径：finance.dat）
-inline void finance_save_to_file() {
+void finance_save_to_file() {
     FILE *fp = fopen("finance.dat", "wb");
     if (fp == NULL) {
         printf("【错误】财务数据保存失败，无法打开文件！\n");
@@ -485,7 +483,7 @@ inline void finance_save_to_file() {
     printf("【成功】财务数据已保存，共%d条流水记录！\n", g_finance_count);
 }
 // 6. 财务数据从文件加载（二进制读取，路径：finance.dat）
-inline void finance_load_from_file() {
+void finance_load_from_file() {
     FILE *fp = fopen("finance.dat", "rb");
     if (fp == NULL) {
         printf("【提示】无历史财务数据，将创建新数据！\n");
@@ -501,17 +499,16 @@ inline void finance_load_from_file() {
 }
 // -------------------------- 四、加载入口 --------------------------
 // 1. 所有数据保存到文件（用户+社团+财务）
-inline void all_data_save() {
+void all_data_save() {
     user_save_to_file();
     club_save_to_file();
     finance_save_to_file();
     printf("【成功】所有数据已完成持久化保存！\n");
 }
 // 2. 所有数据从文件加载（用户+社团+财务）
-inline void all_data_load() {
+void all_data_load() {
     user_load_from_file();
     club_load_from_file();
     finance_load_from_file();
     printf("【成功】所有历史数据已完成加载！\n");
 }
-#endif //UNTITLED8_HOMEWORKSTRUCT_H
